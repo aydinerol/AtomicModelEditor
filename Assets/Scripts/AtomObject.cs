@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Atom : MonoBehaviour
+public class AtomObject : MonoBehaviour
 {
     //ATOM NO BAÐ TÜR PEPTÝT AD   ZÝNCÝR ETÝKET   PEPTÝT NO   X Y   Z?	?	ATOM ADI
 
