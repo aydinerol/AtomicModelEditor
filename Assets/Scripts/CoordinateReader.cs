@@ -25,10 +25,10 @@ public class CoordinateReader : MonoBehaviour
                     float x = float.Parse(parts[0], CultureInfo.InvariantCulture);
                     float y = float.Parse(parts[1], CultureInfo.InvariantCulture);
                     float z = float.Parse(parts[2], CultureInfo.InvariantCulture);
-                    Debug.Log("Coordinates" + (x, y, z));
                     coordinates.Add(new Vector3(x, y, z));
                 }
             }
+            Debug.Log($"Read {coordinates.Count} coordinates from file.");
         }
         catch (System.Exception e)
         {

@@ -1,55 +1,90 @@
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using UnityEngine;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class CubeGenerator : MonoBehaviour
 {
     // Properties
-    public Vector3 cubeDimensions = new Vector3(10, 10, 10);
+    public Vector3 cubeDimensions = new Vector3(22, 42, 22);
     public GameObject spherePrefab;
     public string coordinatesFilePath = "Assets/coordinates.txt";
     public float squareSize = 0.5f;
 
     private List<Vector3> availableSlots;
-    private List<Vector3> filledSlots = new List<Vector3>();
+    private DragAndDropManager dragAndDropManager;
 
     void Start()
-    {
-        ReadAndInstantiate();
+    {        
+        dragAndDropManager = FindObjectOfType<DragAndDropManager>();
+        if (dragAndDropManager == null)
+        {
+            Debug.LogError("DragAndDropManager not found in the scene.");
+            return;
+        }
+        GenerateCube();
+        ReadCoordinates();
+        InstantiateSpheres();
     }
-
-    void ReadAndInstantiate()
+    
+    void GenerateCube()
     {
-        CoordinateReader coordinateReader = new CoordinateReader();
-        coordinateReader.filePath = coordinatesFilePath;
-
-        availableSlots = coordinateReader.ReadCoordinates();
-        filledSlots.Clear();
-
-        GenerateCubeWithSpheres();
-    }
-
-    void GenerateCubeWithSpheres()
-    {
-        // Create the cube (could be a wireframe or a transparent cube for visualization)
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.localScale = cubeDimensions;
         cube.transform.position = cubeDimensions / 2; // Center the cube
+        cube.GetComponent<Renderer>().enabled = false; // Hide the cube
 
-        // Disable the cube's renderer if you don't want it visible
-        cube.GetComponent<Renderer>().enabled = false;
+        cube.name = "MainCube";
+        cube.transform.parent = this.transform;
+    }
 
-        // Instantiate spheres at the specified coordinates
+    void ReadCoordinates()
+    {
+        availableSlots = new List<Vector3>();
+
+        try
+        {
+            string[] lines = File.ReadAllLines(coordinatesFilePath);
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split(',');
+                if (parts.Length == 3)
+                {
+                    float x = float.Parse(parts[0], CultureInfo.InvariantCulture);
+                    float y = float.Parse(parts[1], CultureInfo.InvariantCulture);
+                    float z = float.Parse(parts[2], CultureInfo.InvariantCulture);
+                    availableSlots.Add(new Vector3(x, y, z));
+                }
+            }
+
+            Debug.Log($"Read {availableSlots.Count} coordinates from file.");
+
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Error reading coordinates: " + e.Message);
+        }
+        // set snappable slots in DragAndDropManager after reading data
+        dragAndDropManager.SetSnappableSlots(availableSlots);
+    }
+    
+    void InstantiateSpheres()
+    {
+        GameObject mainCube = GameObject.Find("MainCube");
+        
         foreach (Vector3 coord in availableSlots)
         {
             if (IsInsideCube(coord))
             {
-                Instantiate(spherePrefab, coord, Quaternion.identity);
-                filledSlots.Add(coord);
+                GameObject sphere = Instantiate(spherePrefab, coord, Quaternion.identity);
+                sphere.AddComponent<SelectableObject>().dragAndDropManager = dragAndDropManager;
+                sphere.transform.parent = mainCube.transform;
             }
         }
     }
-
+    
     bool IsInsideCube(Vector3 coord)
     {
         return coord.x >= 0 && coord.x <= cubeDimensions.x &&
@@ -57,6 +92,12 @@ public class CubeGenerator : MonoBehaviour
                coord.z >= 0 && coord.z <= cubeDimensions.z;
     }
 
+    public void SetDragAndDropManager(DragAndDropManager manager)
+    {
+        dragAndDropManager = manager;
+    }
+
+    // Debug Drawing
     void OnDrawGizmos()
     {
         if (availableSlots == null) return;

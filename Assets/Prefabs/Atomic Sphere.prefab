@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1829558639144164963}
   - component: {fileID: 3213382929769487801}
   - component: {fileID: 6844477069906617947}
+  - component: {fileID: 1133035659601474253}
+  - component: {fileID: 3236500352456010144}
   m_Layer: 0
   m_Name: Atomic Sphere
   m_TagString: Untagged
@@ -105,3 +107,28 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1133035659601474253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644977502055092380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bf99e5cb40b48e1895a7cce478acb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragAndDropManager: {fileID: 0}
+--- !u!114 &3236500352456010144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644977502055092380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 692f52b223ee6b84eb9fd510342a86ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
