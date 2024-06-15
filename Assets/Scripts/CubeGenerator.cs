@@ -72,7 +72,7 @@ public class CubeGenerator : MonoBehaviour
     
     void InstantiateSpheres()
     {
-        GameObject mainCube = GameObject.Find("MainCube");
+        //GameObject mainCube = GameObject.Find("MainCube");
         
         foreach (Vector3 coord in availableSlots)
         {
@@ -80,7 +80,7 @@ public class CubeGenerator : MonoBehaviour
             {
                 GameObject sphere = Instantiate(spherePrefab, coord, Quaternion.identity);
                 sphere.AddComponent<SelectableObject>().dragAndDropManager = dragAndDropManager;
-                sphere.transform.parent = mainCube.transform;
+                //sphere.transform.parent = mainCube.transform;
             }
         }
     }
@@ -123,5 +123,10 @@ public class CubeGenerator : MonoBehaviour
         Gizmos.DrawLine(topRight, bottomRight);
         Gizmos.DrawLine(bottomRight, bottomLeft);
         Gizmos.DrawLine(bottomLeft, topLeft);
+    }
+
+    public List<Vector3> GetAvailableSlots()
+    {
+        return availableSlots;
     }
 }
